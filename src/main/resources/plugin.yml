@@ -1,0 +1,19 @@
+name: Stratego
+version: '${project.version}'
+main: me.tim.stratego.Stratego
+api-version: '1.20'
+commands:
+  blue:
+    usage: /blue <Player>
+  red:
+    usage: /red <Player>
+  showteams:
+    usage: /showteams
+  isflagcaptured:
+    usage: /isflagcaptured
+  start:
+    usage: /start
+  amiinspawn:
+    usage: /amiinspawn
+  restartgame:
+    usage: /restart
