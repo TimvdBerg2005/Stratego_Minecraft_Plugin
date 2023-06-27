@@ -3,6 +3,7 @@ package me.tim.stratego.listeners;
 import me.tim.stratego.Stratego;
 import me.tim.stratego.Utils;
 import me.tim.stratego.card.StrategoCard;
+import me.tim.stratego.manager.GameManager;
 import me.tim.stratego.teams.Team;
 import net.kyori.adventure.title.Title;
 import net.kyori.adventure.title.TitlePart;
@@ -17,9 +18,11 @@ import org.bukkit.event.player.PlayerInteractEvent;
 public class ChangeCardClickListener implements Listener {
 
     private final Stratego plugin;
+    private final GameManager gameManager;
 
     public ChangeCardClickListener(Stratego plugin) {
         this.plugin = plugin;
+        this.gameManager = plugin.getGameManager();
     }
 
     @EventHandler
@@ -31,19 +34,17 @@ public class ChangeCardClickListener implements Listener {
                 return;
             }
             if (clickedType == Material.ECHO_SHARD) {
-                if (plugin.isPlayerInSpawn(player)) {
-                    Team team = plugin.getPlayerTeam(player);
+                if (gameManager.isPlayerInSpawn(player)) {
+                    Team team = gameManager.getPlayerTeam(player);
                     if (team == null) {
                         player.sendMessage(ChatColor.RED + "You must be in a team to use this");
                         return;
                     }
-                    StrategoCard currentCard = plugin.getCurrentCard(player);
-                    StrategoCard strategoCard = team.replaceRandomCard(currentCard);
-                    plugin.setPlayerCard(player, strategoCard);
-                    Utils.updateCard(player, strategoCard);
-
-                    String message = ChatColor.DARK_AQUA + "" + ChatColor.BOLD + strategoCard.getName();
-                    player.sendActionBar(message);
+                    if (gameManager.canSwapCard(player)) {
+                        gameManager.changePlayerCard(player);
+                    } else {
+                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cYou can only swap cards after a kill"));
+                    }
 
                 } else {
                     player.sendMessage(ChatColor.RED + "You must be in spawn to change cards");

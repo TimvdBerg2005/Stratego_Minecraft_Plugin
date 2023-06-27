@@ -1,6 +1,7 @@
 package me.tim.stratego.commands;
 
 import me.tim.stratego.Stratego;
+import me.tim.stratego.manager.GameManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -10,9 +11,10 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class TeamRedCommand implements CommandExecutor {
-    private final Stratego plugin;
+    private final GameManager gameManager;
+
     public TeamRedCommand(Stratego plugin) {
-        this.plugin = plugin;
+        this.gameManager = plugin.getGameManager();
     }
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args) {
@@ -20,7 +22,7 @@ public class TeamRedCommand implements CommandExecutor {
             Player player = (Player) sender;
             if (args.length == 1) {
                 Player targetPlayer = Bukkit.getPlayer(args[0]);
-                plugin.getTeams().get(0).addPlayer(targetPlayer);
+                gameManager.getTeams().get(0).addPlayer(targetPlayer);
                 if (targetPlayer == null) {
                     player.sendMessage(ChatColor.RED + "The player was not found");
                     return true;

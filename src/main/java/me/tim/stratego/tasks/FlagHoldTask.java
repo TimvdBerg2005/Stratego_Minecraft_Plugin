@@ -1,6 +1,8 @@
 package me.tim.stratego.tasks;
 
 import me.tim.stratego.Stratego;
+import me.tim.stratego.manager.GameManager;
+import me.tim.stratego.manager.GameState;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -13,10 +15,10 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class FlagHoldTask extends BukkitRunnable {
 
-    private final Stratego plugin;
+    private final GameManager gameManager;
 
     public FlagHoldTask(Stratego plugin) {
-        this.plugin = plugin;
+        this.gameManager = plugin.getGameManager();
     }
 
     @Override
@@ -25,9 +27,8 @@ public class FlagHoldTask extends BukkitRunnable {
             if (player.getInventory().getItemInOffHand().getType().name().toLowerCase().contains("wool")) {
                 player.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 20, 0));
                 player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20, 0));
-                if (plugin.isPlayerInSpawn(player)) {
-                    player.sendMessage(ChatColor.GREEN + "You made it! GG");
-                    this.cancel();
+                if (gameManager.isPlayerInSpawn(player)) {
+                    gameManager.setGameState(GameState.WON);
                     player.getInventory().setItem(EquipmentSlot.OFF_HAND, new ItemStack(Material.AIR));
                 }
             }

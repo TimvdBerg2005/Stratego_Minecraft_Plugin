@@ -9,11 +9,7 @@ commands:
     usage: /red <Player>
   showteams:
     usage: /showteams
-  isflagcaptured:
-    usage: /isflagcaptured
-  start:
-    usage: /start
-  amiinspawn:
-    usage: /amiinspawn
-  restartgame:
-    usage: /restart
+  availablecards:
+    usage: /availablecards
+  gamestate:
+    usage: /gamestate <gamestate>

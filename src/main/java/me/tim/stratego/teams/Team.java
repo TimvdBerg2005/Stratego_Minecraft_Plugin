@@ -3,10 +3,9 @@ package me.tim.stratego.teams;
 import me.tim.stratego.Stratego;
 import me.tim.stratego.card.Cards;
 import me.tim.stratego.card.StrategoCard;
-import me.tim.stratego.card.cards.MajorCard;
 import me.tim.stratego.flag.Flag;
+import me.tim.stratego.manager.GameManager;
 import org.bukkit.ChatColor;
-import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -15,9 +14,10 @@ import org.bukkit.inventory.ItemStack;
 import java.util.*;
 
 public class Team {
-    private String name;
+    private final GameManager gameManager;
+    private final String name;
     private boolean flagCaptured = false;
-    private Location defaultFlagLocation;
+    private Location defaultSpawnLocation;
     private ArrayList<Player> players;
     private final ChatColor color;
     private final ItemStack woolBlock;
@@ -26,15 +26,16 @@ public class Team {
     private final Material banner;
     private HashMap<StrategoCard, Integer> availableCards;
 
-    public Team(Stratego plugin, ChatColor color, Location defaultFlagLocation, ItemStack woolBlock, String name, Material banner) {
+    public Team(Stratego plugin, ChatColor color, Location defaultSpawnLocation, ItemStack woolBlock, String name, Material banner) {
         this.players = new ArrayList<>();
         this.plugin = plugin;
+        this.gameManager = plugin.getGameManager();
         this.color = color;
         this.woolBlock = woolBlock;
-        this.defaultFlagLocation = defaultFlagLocation;
+        this.defaultSpawnLocation = defaultSpawnLocation;
         this.name = name;
         this.banner = banner;
-        this.flag = new Flag(plugin, this, defaultFlagLocation);
+        this.flag = new Flag(plugin, this, defaultSpawnLocation);
         availableCards = new HashMap<>();
         refillCards();
     }
@@ -44,6 +45,11 @@ public class Team {
         availableCards.put(card, count + 1);
         return getRandomAvailableCard();
     }
+
+    public HashMap<StrategoCard, Integer> getAvailableCards() {
+        return availableCards;
+    }
+
     public StrategoCard getRandomAvailableCard() {
         List<StrategoCard> availableCardTypes = new ArrayList<>();
         for (Map.Entry<StrategoCard, Integer> entry : availableCards.entrySet()) {
@@ -72,6 +78,7 @@ public class Team {
     }
 
     public void resetFlag() {
+        if (flag == null) return;
         flag.resetFlag();
     }
 
@@ -119,7 +126,7 @@ public class Team {
     }
 
     public void moveFlagToDefault() {
-        flag.moveFlag(defaultFlagLocation);
+        flag.moveFlag(defaultSpawnLocation);
     }
 
     public void setFlagCaptured(boolean flagCaptured) {
@@ -141,5 +148,9 @@ public class Team {
 
     public void addPlayer(Player player) {
         players.add(player);
+    }
+
+    public Location getDefaultSpawnLocation() {
+        return defaultSpawnLocation;
     }
 }

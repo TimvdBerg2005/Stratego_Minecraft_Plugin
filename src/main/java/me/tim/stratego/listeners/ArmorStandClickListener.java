@@ -1,6 +1,7 @@
 package me.tim.stratego.listeners;
 
 import me.tim.stratego.Stratego;
+import me.tim.stratego.manager.GameManager;
 import me.tim.stratego.teams.Team;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.ArmorStand;
@@ -15,10 +16,10 @@ import org.bukkit.potion.PotionEffectType;
 
 public class ArmorStandClickListener implements Listener {
 
-    private final Stratego plugin;
+    private final GameManager gameManager;
 
     public ArmorStandClickListener(Stratego plugin) {
-        this.plugin = plugin;
+        this.gameManager = plugin.getGameManager();
     }
 
     @EventHandler
@@ -27,7 +28,7 @@ public class ArmorStandClickListener implements Listener {
         ArmorStand armorStand = event.getRightClicked();
         event.setCancelled(true);
         Team targetTeam = null;
-        for (Team team : plugin.getTeams()) {
+        for (Team team : gameManager.getTeams()) {
             if (team.getName().equals(armorStand.getName())) {
                 targetTeam = team;
             }
@@ -36,7 +37,7 @@ public class ArmorStandClickListener implements Listener {
         if (targetTeam == null) {
             player.sendMessage(ChatColor.RED + "The target team was not found");
         } else {
-            if (plugin.getPlayerTeam(player) == targetTeam) {
+            if (gameManager.getPlayerTeam(player) == targetTeam) {
                 player.sendMessage(ChatColor.RED + "You cannot capture your own flag!");
                 return;
             }

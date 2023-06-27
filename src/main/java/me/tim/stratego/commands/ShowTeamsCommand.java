@@ -1,6 +1,7 @@
 package me.tim.stratego.commands;
 
 import me.tim.stratego.Stratego;
+import me.tim.stratego.manager.GameManager;
 import me.tim.stratego.teams.Team;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -10,10 +11,10 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class ShowTeamsCommand implements CommandExecutor {
-    private final Stratego plugin;
+    private final GameManager gameManager;
 
     public ShowTeamsCommand(Stratego plugin) {
-        this.plugin = plugin;
+        this.gameManager = plugin.getGameManager();
     }
 
     @Override
@@ -22,7 +23,7 @@ public class ShowTeamsCommand implements CommandExecutor {
             Player player = (Player) sender;
             player.sendMessage(ChatColor.GREEN + "Teams: ");
             player.sendMessage(ChatColor.GRAY + "------------------");
-            for (Team team : plugin.getTeams()) {
+            for (Team team : gameManager.getTeams()) {
                 player.sendMessage(team.getColor() + " " + team.getName());
                 for (Player players : team.getPlayers()) {
                     player.sendMessage(ChatColor.GRAY + " - " + team.getColor() + players.getName());
